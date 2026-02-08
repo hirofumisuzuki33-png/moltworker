@@ -228,9 +228,12 @@ if (process.env.CF_AI_GATEWAY_MODEL) {
             models: [{ id: modelId, name: modelId, contextWindow: 131072, maxTokens: 8192 }],
         };
         
-        // Only set api field for Anthropic - let OpenClaw auto-detect for others
+        // Set api field based on provider
         if (gwProvider === 'anthropic') {
             providerConfig.api = 'anthropic-messages';
+        } else {
+            // Try google-ai for Google AI Studio
+            providerConfig.api = 'google-ai';
         }
 
         config.models = config.models || {};
