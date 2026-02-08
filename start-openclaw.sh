@@ -219,17 +219,23 @@ if (process.env.CF_AI_GATEWAY_MODEL) {
     }
 
     if (baseUrl && apiKey) {
-        const api = gwProvider === 'anthropic' ? 'anthropic-messages' : 'gemini';
         const providerName = 'cf-ai-gw-' + gwProvider;
+        
+        // Build provider config - only include api for anthropic
+        const providerConfig = {
+            baseUrl: baseUrl,
+            apiKey: apiKey,
+            models: [{ id: modelId, name: modelId, contextWindow: 131072, maxTokens: 8192 }],
+        };
+        
+        // Only set api field for Anthropic - let OpenClaw auto-detect for others
+        if (gwProvider === 'anthropic') {
+            providerConfig.api = 'anthropic-messages';
+        }
 
         config.models = config.models || {};
         config.models.providers = config.models.providers || {};
-        config.models.providers[providerName] = {
-            baseUrl: baseUrl,
-            apiKey: apiKey,
-            api: api,
-            models: [{ id: modelId, name: modelId, contextWindow: 131072, maxTokens: 8192 }],
-        };
+        config.models.providers[providerName] = providerConfig;
         config.agents = config.agents || {};
         config.agents.defaults = config.agents.defaults || {};
         config.agents.defaults.model = { primary: providerName + '/' + modelId };
