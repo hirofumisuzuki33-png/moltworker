@@ -219,7 +219,7 @@ if (process.env.CF_AI_GATEWAY_MODEL) {
     }
 
     if (baseUrl && apiKey) {
-        const api = gwProvider === 'anthropic' ? 'anthropic-messages' : 'openai';
+        const api = gwProvider === 'anthropic' ? 'anthropic-messages' : 'openai-chat';
         const providerName = 'cf-ai-gw-' + gwProvider;
 
         config.models = config.models || {};
